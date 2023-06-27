@@ -2,7 +2,7 @@ package main
 
 import "net/http"
 
-func (app *application) fatalError(r *http.Request, err error) {
+func (app *application) logFatalError(r *http.Request, err error) {
 	app.logger.err.Fatalf("%s\t%s\t%s", r.Method, r.URL.Path, err)
 }
 

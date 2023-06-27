@@ -41,6 +41,21 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
+func (m UserModel) GetByID(id int64) (*User, error) {
+	query := `
+	SELECT id, created_at, name, email, status
+	FROM users
+	WHERE id = $1`
+
+	var user User
+	err := m.DB.QueryRow(query, id).Scan(&user.ID, &user.CreatedAt, &user.Name, &user.Email, &user.Status)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (u UserModel) GetAll() ([]*User, error) {
 	query := `
 	SELECT id, name, email, created_at, status

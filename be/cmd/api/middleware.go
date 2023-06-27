@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"net/http"
 	"strconv"
 	"strings"
@@ -38,9 +38,14 @@ func (app *application) authenticate(next http.HandlerFunc) http.HandlerFunc {
 			app.invalidCredentialsResponse(w, r)
 			return
 		}
-		fmt.Print(userID)
 
-		// set user in context
-		next.ServeHTTP(w, r)
+		user, err := app.models.Users.GetByID(userID)
+		if err != nil {
+			app.invalidCredentialsResponse(w, r)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "user", user)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
