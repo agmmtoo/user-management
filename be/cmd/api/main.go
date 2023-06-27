@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"time"
 
+	"agmmtoo.me/be/internal/data"
 	_ "github.com/lib/pq"
 )
 
@@ -22,6 +23,9 @@ type config struct {
 	// cors struct {
 	// 	trustedOrigins []string
 	// }
+	jwt struct {
+		secret string
+	}
 }
 
 type application struct {
@@ -30,6 +34,7 @@ type application struct {
 		info *log.Logger
 		err  *log.Logger
 	}
+	models data.Models
 }
 
 func main() {
@@ -39,6 +44,7 @@ func main() {
 	env_port, _ := strconv.ParseInt(os.Getenv("PORT"), 10, 64)
 	flag.IntVar(&config.port, "port", int(env_port), "Server port")
 	flag.StringVar(&config.db.url, "dburl", os.Getenv("DATABASE_URL"), "PostgreSQL DB URL")
+	flag.StringVar(&config.jwt.secret, "jwt-secret", os.Getenv("JWT_SECRET"), "JWT secret key")
 
 	flag.Parse()
 
@@ -63,6 +69,7 @@ func main() {
 	app := &application{
 		config: config,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	server := &http.Server{
