@@ -83,6 +83,25 @@ func (u UserModel) GetAll() ([]*User, error) {
 	return users, nil
 }
 
+func (u UserModel) Delete(userID int64) error {
+	query := `
+	DELETE FROM users
+	WHERE id = $1`
+
+	result, err := u.DB.Exec(query, userID)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrRecordNotFound
+	}
+	return nil
+}
+
 type User struct {
 	ID        int64     `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
