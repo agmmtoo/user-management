@@ -5,10 +5,13 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	_ "github.com/lib/pq"
 )
 
 type config struct {
@@ -16,16 +19,21 @@ type config struct {
 	db   struct {
 		url string
 	}
-	cors struct {
-		trustedOrigins []string
-	}
+	// cors struct {
+	// 	trustedOrigins []string
+	// }
 }
 
 type application struct {
 	config config
+	logger struct {
+		info *log.Logger
+		err  *log.Logger
+	}
 }
 
 func main() {
+	// parse flags, set config
 	var config config
 
 	env_port, _ := strconv.ParseInt(os.Getenv("PORT"), 10, 64)
@@ -34,27 +42,38 @@ func main() {
 
 	flag.Parse()
 
-	// init logger
-	// logger :=
+	// logger
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	errLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	logger := struct {
+		info *log.Logger
+		err  *log.Logger
+	}{
+		info: infoLog,
+		err:  errLog,
+	}
 
-	// init db connection
+	// db connection
 	db, err := openDB(config)
 	if err != nil {
-		// logger.PrintFatal(err, nil)
+		errLog.Fatal(err)
 	}
 	defer db.Close()
 
 	app := &application{
 		config: config,
+		logger: logger,
 	}
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", config.port),
-		Handler: app.routes(),
+		Addr:     fmt.Sprintf(":%d", config.port),
+		Handler:  app.routes(),
+		ErrorLog: errLog,
 	}
 
+	infoLog.Printf("Starting server on %s", server.Addr)
 	err = server.ListenAndServe()
-	// errLog.Fatal(err)
+	errLog.Fatal(err)
 }
 
 func openDB(config config) (*sql.DB, error) {
