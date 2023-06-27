@@ -2,8 +2,12 @@ package main
 
 import "net/http"
 
-func (app *application) logError(r *http.Request, err error) {
+func (app *application) fatalError(r *http.Request, err error) {
 	app.logger.err.Fatalf("%s\t%s\t%s", r.Method, r.URL.Path, err)
+}
+
+func (app *application) logError(r *http.Request, err error) {
+	app.logger.err.Printf("%s\t%s\t%s", r.Method, r.URL.Path, err)
 }
 
 func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, status int, message interface{}) {
