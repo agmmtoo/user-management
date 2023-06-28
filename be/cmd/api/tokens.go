@@ -18,7 +18,7 @@ func (app *application) createAuthTokenHandler(w http.ResponseWriter, r *http.Re
 
 	err := app.readJSON(w, r, &input)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		app.badRequestResponse(w, r)
 		return
 	}
 
@@ -58,7 +58,10 @@ func (app *application) createAuthTokenHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusCreated, map[string]any{"token": string(jwtBytes)})
+	err = app.writeJSON(w, http.StatusCreated, map[string]any{
+		"user":  user,
+		"token": string(jwtBytes),
+	})
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

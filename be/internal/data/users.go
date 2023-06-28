@@ -50,7 +50,12 @@ func (m UserModel) GetByID(id int64) (*User, error) {
 	var user User
 	err := m.DB.QueryRow(query, id).Scan(&user.ID, &user.CreatedAt, &user.Name, &user.Email, &user.Status)
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return &user, nil
@@ -58,7 +63,7 @@ func (m UserModel) GetByID(id int64) (*User, error) {
 
 func (u UserModel) GetAll() ([]*User, error) {
 	query := `
-	SELECT id, name, email, created_at, status
+	SELECT id, name, email
 	FROM users`
 
 	rows, err := u.DB.Query(query)
@@ -71,7 +76,7 @@ func (u UserModel) GetAll() ([]*User, error) {
 
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.Status)
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
 		if err != nil {
 			return nil, err
 		}
@@ -102,13 +107,23 @@ func (u UserModel) Delete(userID int64) error {
 	return nil
 }
 
+func (u UserModel) Update(user *User) error {
+	query := `
+	UPDATE users
+	SET name=$1, email=$2, password_hash=$3, status=$4
+	WHERE id = $5
+	RETURNING id, name, email, status`
+
+	return u.DB.QueryRow(query, user.Name, user.Email, user.Password.hash, user.Status, user.ID).Scan(&user.ID, &user.Name, &user.Email, &user.Status)
+}
+
 type User struct {
 	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
-	Status    bool      `json:"status"`
+	Status    bool      `json:"status,omitempty"`
 }
 
 type password struct {
