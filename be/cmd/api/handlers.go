@@ -20,5 +20,7 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthTokenHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v1/userlogs", app.listUserlogsHandler)
+
 	return app.enableCORS(http.Handler(router))
 }
