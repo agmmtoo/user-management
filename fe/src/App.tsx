@@ -12,17 +12,20 @@ import AuthLayout from "./pages/AuthLayout";
 import Users from "./pages/Users";
 import Logs from "./pages/Logs";
 import Login from "./pages/Login";
+import UserInfo from "./components/users/UserInfo";
 
-import logLoader from "./helpers/userlogRouteLoader";
+import logsLoader from "./helpers/userlogsRouteLoader";
+import usersLoader from "./helpers/usersRouteLoader";
+import userLoader from "./helpers/userRouterLoader";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Home />}>
       <Route path="/" element={<AuthLayout />}>
-        <Route path="users" element={<Users />}>
-          <Route path=":id" element={<div>user</div>} />
+        <Route path="users" element={<Users />} loader={usersLoader}>
+          <Route path=":userId" element={<UserInfo />} loader={userLoader} />
         </Route>
-        <Route index element={<Logs />} loader={logLoader} />
+        <Route index element={<Logs />} loader={logsLoader} />
       </Route>
       <Route path="login" element={<Login />} />
     </Route>

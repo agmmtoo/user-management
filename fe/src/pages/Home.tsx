@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Nav />
-      <main>
+      <main className="p-1 md:w-2/3 mx-auto">
         <Outlet />
       </main>
     </>
