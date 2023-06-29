@@ -13,12 +13,16 @@ import Users from "./pages/Users";
 import Logs from "./pages/Logs";
 import Login from "./pages/Login";
 
+import logLoader from "./helpers/userlogRouteLoader";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Home />}>
       <Route path="/" element={<AuthLayout />}>
-        <Route index element={<Users />} />
-        <Route path="logs" element={<Logs />} />
+        <Route path="users" element={<Users />}>
+          <Route path=":id" element={<div>user</div>} />
+        </Route>
+        <Route index element={<Logs />} loader={logLoader} />
       </Route>
       <Route path="login" element={<Login />} />
     </Route>
