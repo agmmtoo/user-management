@@ -22,3 +22,12 @@ export async function remove(url: string) {
         headers,
     });
 }
+
+export async function update<T>(url: string, data: T) {
+    const response = await fetch(`${BASE_URL}${url}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(data),
+    });
+    return response.json();
+}

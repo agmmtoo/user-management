@@ -1,4 +1,4 @@
-import { create, remove } from "./base.api";
+import { create, remove, update } from "./base.api";
 
 import { User } from "../types/User.interface";
 
@@ -14,4 +14,15 @@ export async function createUser(user: PostBodyUser): Promise<ResponseUser> {
 
 export async function deleteUser(id: string | undefined) {
   return remove(`/users/${id}`);
+}
+
+export type PatchBodyUser = Partial<
+  Pick<User, "name" | "email"> & { password: string; status: boolean }
+>;
+
+export async function updateUser(
+  id: string | undefined,
+  user: PatchBodyUser
+): Promise<{ user: User }> {
+  return update<PatchBodyUser>(`/users/${id}`, user);
 }

@@ -1,7 +1,6 @@
 import { Form, useLoaderData } from "react-router-dom";
 
 import { User } from "../../types/User.interface";
-import { classNames } from "../../utils/classNames";
 import Button from "../global/Button";
 import Badge from "../global/Badge";
 

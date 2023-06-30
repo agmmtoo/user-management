@@ -14,6 +14,7 @@ import Logs from "./pages/Logs";
 import Login from "./pages/Login";
 import UserInfo from "./components/users/UserInfo";
 import NewUser from "./components/users/NewUser";
+import EditUser from "./components/users/EditUser";
 import ErrorPage from "./pages/ErrorPage";
 
 import logsLoader from "./helpers/userlogsRouteLoader";
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<AuthLayout />}>
         <Route path="users" element={<Users />} loader={usersLoader}>
           <Route path=":userId" element={<UserInfo />} loader={userLoader} action={userAction} />
+          <Route path=":userId/edit" element={<EditUser />} loader={userLoader} action={userAction} />
           <Route path="new" element={<NewUser />} action={usersAction} />
         </Route>
         <Route index element={<Logs />} loader={logsLoader} />
