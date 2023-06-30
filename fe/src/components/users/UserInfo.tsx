@@ -24,7 +24,7 @@ function UserInfo() {
         <time>{new Date(user.created_at).toDateString()}</time>
         <div className="inline-flex gap-2">
           <Form method="DELETE">
-            <Button variant="secondary">
+            <Button type="submit" variant="secondary">
               Delete
             </Button>
           </Form>

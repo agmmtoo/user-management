@@ -1,6 +1,19 @@
-import { create, remove, update } from "./base.api";
+import { get, create, remove, update } from "./base.api";
 
-import { User } from "../types/User.interface";
+import { User, UserBasic } from "../types/User.interface";
+
+export async function getUser(
+  id: string | undefined,
+  signal?: AbortSignal
+): Promise<{ user: User }> {
+  return get(`/users/${id}`, signal);
+}
+
+export async function getUserList(
+  signal: AbortSignal
+): Promise<{ users: UserBasic[] }> {
+  return get("/users", signal);
+}
 
 export type PostBodyUser = Pick<User, "name" | "email"> & { password: string };
 
@@ -25,4 +38,14 @@ export async function updateUser(
   user: PatchBodyUser
 ): Promise<{ user: User }> {
   return update<PatchBodyUser>(`/users/${id}`, user);
+}
+
+export async function authUser(
+  email: string,
+  password: string
+): Promise<{ token: string; user: User }> {
+  return create<{ email: string; password: string }>("/tokens/authentication", {
+    email,
+    password,
+  });
 }

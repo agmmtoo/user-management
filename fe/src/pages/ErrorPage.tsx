@@ -1,8 +1,17 @@
-import { useRouteError } from "react-router-dom";
+import { useRouteError, Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/auth.context";
 
 export default function ErrorPage() {
   const error = useRouteError();
-  console.log(error);
+  const auth = useAuth();
+
+  if (error) {
+    // clear local storage and set user to null
+    // on EVERY FREAKING ERROR
+    // localStorage.clear();
+    auth.setUser(null);
+    return <Navigate to="login" />;
+  }
 
   return (
     <div>
