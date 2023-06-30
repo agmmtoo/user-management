@@ -1,6 +1,7 @@
 import { Link, Outlet, useLoaderData, useMatch } from "react-router-dom";
 
 import { ListItemUser } from "../components/users/ListItemUser";
+
 import { UserBasic } from "../types/User.interface";
 interface LoaderDataUsers {
   users: UserBasic[];
@@ -14,6 +15,9 @@ function Users() {
   return (
     <div className="flex gap-4 flex-col-reverse md:flex-row">
       <ul className="w-full md:w-1/3 space-y-4">
+        <li>
+          <Link to="new">Create a user</Link>{" "}
+        </li>
         {data.users.map((user) => (
           <li key={user.id} className="">
             <Link to={`${user.id}`}>
