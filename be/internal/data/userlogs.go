@@ -20,7 +20,7 @@ const (
 func (m UserLogModel) Insert(log *UserLog) error {
 	query := `
 	INSERT INTO userlogs (user_id, event, data)
-	VALUES $1, $2, $3
+	VALUES ($1, $2, $3)
 	RETURNING id, created_at
 	`
 
@@ -42,6 +42,7 @@ func (m UserLogModel) GetAll() ([]*UserLogWithUser, error) {
 	FROM userlogs ul
 	INNER JOIN users u
 	ON u.id = ul.user_id
+	ORDER BY ul.created_at DESC
 	`)
 	if err != nil {
 		return nil, err

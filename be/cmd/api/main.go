@@ -20,9 +20,6 @@ type config struct {
 	db   struct {
 		url string
 	}
-	// cors struct {
-	// 	trustedOrigins []string
-	// }
 	jwt struct {
 		secret string
 	}

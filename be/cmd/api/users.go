@@ -3,7 +3,9 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"agmmtoo.me/be/internal/data"
 )
@@ -37,6 +39,14 @@ func (app *application) createUserHandler(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 		return
 	}
+
+	// log user action
+	go func() {
+		err = app.logUserAction(r, data.EventCreate, fmt.Sprintf("#%d%s(%s)", user.ID, user.Name, user.Email))
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+	}()
 
 	err = app.writeJSON(w, http.StatusCreated, map[string]any{"user": user})
 	if err != nil {
@@ -115,6 +125,14 @@ func (app *application) deleteUserHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// log user action
+	go func() {
+		err = app.logUserAction(r, data.EventDelete, fmt.Sprintf("id=%d", id))
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+	}()
+
 	err = app.writeJSON(w, http.StatusOK, map[string]any{"status": "success"})
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -149,20 +167,27 @@ func (app *application) updateUserHandler(w http.ResponseWriter, r *http.Request
 		app.badRequestResponse(w, r)
 		return
 	}
+
+	var logData string
+
 	if input.Name != nil {
 		user.Name = *input.Name
+		logData += "name: " + *input.Name + " "
 	}
 	if input.Email != nil {
 		user.Email = *input.Email
+		logData += "email: " + *input.Email + " "
 	}
 	if input.Status != nil {
 		user.Status = *input.Status
+		logData += "status: " + strconv.FormatBool(*input.Status) + " "
 	}
 	if input.Password != nil {
 		if err = user.Password.Set(*input.Password); err != nil {
 			app.serverErrorResponse(w, r, err)
 			return
 		}
+		logData += "password: " + *input.Password + " "
 	}
 
 	err = app.models.Users.Update(user)
@@ -171,6 +196,13 @@ func (app *application) updateUserHandler(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 		return
 	}
+
+	go func() {
+		err = app.logUserAction(r, data.EventUpdate, logData)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+	}()
 
 	err = app.writeJSON(w, http.StatusOK, map[string]any{
 		"user": user,

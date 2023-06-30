@@ -4,23 +4,31 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 )
 
 func (app *application) routes() http.Handler {
 	router := httprouter.New()
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: false,
+		Debug:            false,
+	})
+
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)
-	// router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowed)
 
 	router.HandlerFunc(http.MethodGet, "/v1/users", app.authenticate(app.listUsersHandler))
-	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUserHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/users", app.authenticate(app.createUserHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/users/:id", app.authenticate(app.showUserHandler))
 	router.HandlerFunc(http.MethodPatch, "/v1/users/:id", app.authenticate(app.updateUserHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/users/:id", app.authenticate(app.deleteUserHandler))
 
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthTokenHandler)
 
-	router.HandlerFunc(http.MethodGet, "/v1/userlogs", app.listUserlogsHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/userlogs", app.authenticate(app.listUserlogsHandler))
 
-	return app.enableCORS(http.Handler(router))
+	return c.Handler(http.Handler(router))
 }

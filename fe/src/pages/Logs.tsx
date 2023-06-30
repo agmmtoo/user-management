@@ -14,7 +14,7 @@ function Logs() {
       <ul>
         {data.logs.map((log) => (
           <li key={log.id}>
-            {log.event} : {log.user.name}
+            {log.event} : {log.user.name} - {log.data}
           </li>
         ))}
       </ul>

@@ -64,7 +64,9 @@ func (m UserModel) GetByID(id int64) (*User, error) {
 func (u UserModel) GetAll() ([]*User, error) {
 	query := `
 	SELECT id, name, email
-	FROM users`
+	FROM users
+	ORDER BY created_at DESC
+	`
 
 	rows, err := u.DB.Query(query)
 	if err != nil {
