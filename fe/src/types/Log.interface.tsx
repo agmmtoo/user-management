@@ -5,7 +5,7 @@ export type LogEvent = "delete" | "update" | "create";
 export interface Log {
   id: number;
   event: LogEvent;
-  createAt: string;
+  created_at: string;
   data: string;
   user: UserBasic;
 }

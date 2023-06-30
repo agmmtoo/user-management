@@ -10,14 +10,14 @@ export function Nav() {
   };
 
   return (
-    <nav className="p-4 md:mb-12 border-b border-x-blue-950 sticky top-0 bg-gray-50/95 flex justify-between">
+    <nav className="p-4 md:mb-12 border-b border-x-blue-950 sticky top-0 z-10 bg-gray-50/95 flex justify-between">
       <div className="text-blue-800 font-medium uppercase flex gap-4">
         <Link to="/users">Users</Link>
         <Link to="/">Logs</Link>
       </div>
       <div className="text-blue-800 font-medium cursor-pointer">
         {auth.user ? (
-          <button onClick={handleLogout}>Logout ({auth.user.user.name})</button>
+          <button onClick={handleLogout}>LOGOUT ({auth.user.user.name})</button>
         ) : (
           <Link to="/login">Login</Link>
         )}
