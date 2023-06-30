@@ -18,8 +18,8 @@ function Login() {
   return (
     <>
       <form>
-        <input type="text" placeholder="Username" />
-        <input type="password" placeholder="Password" />
+        <input type="text" placeholder="Username"  className="form-input" />
+        <input type="password" placeholder="Password"  className="form-input" />
         <button type="submit">Login</button>
       </form>
       <button
