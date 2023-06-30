@@ -1,4 +1,4 @@
-import { create } from "./base.api";
+import { create, remove } from "./base.api";
 
 import { User } from "../types/User.interface";
 
@@ -10,4 +10,8 @@ interface ResponseUser {
 
 export async function createUser(user: PostBodyUser): Promise<ResponseUser> {
   return create<PostBodyUser>("/users", user);
+}
+
+export async function deleteUser(id: string | undefined) {
+  return remove(`/users/${id}`);
 }

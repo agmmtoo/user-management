@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
 
 import { User } from "../../types/User.interface";
 import { classNames } from "../../utils/classNames";
@@ -24,10 +24,12 @@ function UserInfo() {
       <div className="flex justify-between border-t p-2 items-center">
         <time>{new Date(user.created_at).toDateString()}</time>
         <div className="inline-flex gap-2">
-          <Button onClick={console.log} variant="secondary">
-            Delete
-          </Button>
-          <Button onClick={console.log} variant="primary">
+          <Form method="DELETE">
+            <Button variant="secondary">
+              Delete
+            </Button>
+          </Form>
+          <Button to="edit" variant="primary">
             Edit
           </Button>
         </div>

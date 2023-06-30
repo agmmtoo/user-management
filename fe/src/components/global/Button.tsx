@@ -1,23 +1,32 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { classNames } from "../../utils/classNames";
 
 interface ButtonProps {
   children: React.ReactNode;
-  onClick: () => void;
-  variant: "primary" | "secondary";
+  onClick?: () => void;
+  className?: string;
+  variant?: "primary" | "secondary";
+  to?: string;
 }
 
-function Button({ children, onClick, variant }: ButtonProps) {
+function Button({ children, onClick, className, variant, to }: ButtonProps) {
+  const classes = classNames(
+    "border py-2 px-4 rounded",
+    variant
+    ? variant == "primary" ? "bg-white text-blue-500" : "bg-white text-red-500"
+    : "text-gray-500",
+    className ? className : ""
+  );
+  if (to) {
+    return (
+      <Link to={to} role="button" className={classes}>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <button
-      className={classNames(
-        "border py-2 px-4 rounded",
-        variant == "primary"
-          ? "bg-white text-blue-500"
-          : "bg-white text-red-500"
-      )}
-      onClick={onClick}
-    >
+    <button className={classes} onClick={onClick}>
       {children}
     </button>
   );
