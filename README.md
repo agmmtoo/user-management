@@ -1,6 +1,6 @@
 # README
 
-[Visit](http://35.174.106.143/)
+[Visit](http://13.250.116.55/)
 
 email: `admin@example.com`
 password: `admin`
@@ -18,13 +18,9 @@ sudo apt-get install postgresql
 
 #### create db
 
-```bash
-sudo -u postgres createdb dbname
-```
-
-#### create db user
-
 ```sql
+create database dbname;
+/c dbname;
 CREATE ROLE user WITH LOGIN PASSWORD 'password';
 ```
 
@@ -46,7 +42,7 @@ JWT_SECRET=
 #### install migrate tool
 
 ```bash
-curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.darwin-amd64.tar.gz | tar xvz
+curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
 sudo mv migrate /usr/local/bin
 ```
 
@@ -90,16 +86,15 @@ sudo systemctl status api
 sudo journalctl -u api -f
 ```
 
-#### install nginx
+#### setup nginx
 
 ```bash
 sudo apt-get install nginx
 ```
 
-#### copy backend nginx config from local to server
-
 ```bash
-scp -i ~/path/to/key/key.pem ./be/nginx.conf
+scp -i ~/path/to/key/key.pem ./nginx.conf user@ec2-ip.compute-1.amazonaws.com:/etc/nginx/sites-available/default
+sudo systemctl restart nginx
 ```
 
 ### Frontend
@@ -107,17 +102,6 @@ scp -i ~/path/to/key/key.pem ./be/nginx.conf
 #### copy built frontend from local to server
 
 ```bash
-scp -i ~/path/to/key/key.pem -r ./fe/dist user@ec2-ip.compute-1.amazonaws.com:/var/www/fe
+scp -i ~/path/to/key/key.pem -r ./fe/dist user@ec2-ip.compute-1.amazonaws.com:/var/www/html
 ```
 
-#### copy frontend nginx config from local to server
-
-```bash
-scp -i ~/path/to/key/key.pem ./fe/nginx.conf
-```
-
-#### restart nginx
-
-```bash
-sudo systemctl restart nginx
-```

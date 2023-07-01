@@ -1,4 +1,4 @@
-const BASE_URL = "http://35.174.106.143:4000/v1";
+const BASE_URL = "/v1";
 
 export async function get(url: string, signal?: AbortSignal) {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
