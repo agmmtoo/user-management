@@ -46,8 +46,8 @@ func main() {
 	flag.Parse()
 
 	// logger
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	infoLog := log.New(os.Stdout, "[INFO]", log.Ldate|log.Ltime)
+	errLog := log.New(os.Stderr, "[ERROR]", log.Ldate|log.Ltime|log.Lshortfile)
 	logger := struct {
 		info *log.Logger
 		err  *log.Logger

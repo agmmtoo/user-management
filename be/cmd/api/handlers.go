@@ -15,10 +15,14 @@ func (app *application) routes() http.Handler {
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
-		Debug:            true,
+		Debug:            false,
 	})
 
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)
+
+	router.HandlerFunc(http.MethodGet, "/v1/ping", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Pong!"))
+	}))
 
 	router.HandlerFunc(http.MethodGet, "/v1/users", app.authenticate(app.listUsersHandler))
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.authenticate(app.createUserHandler))
@@ -30,5 +34,5 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/v1/userlogs", app.authenticate(app.listUserlogsHandler))
 
-	return c.Handler(http.Handler(router))
+	return app.recoverPanic(app.logRequest(c.Handler(http.Handler(router))))
 }
