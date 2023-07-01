@@ -8,7 +8,7 @@ function UserInfo() {
   const { user } = useLoaderData() as { user: User };
 
   return (
-    <div className="w-full border rounded-sm flex flex-col md:h-full justify-between bg-white/95 md:max-h-56">
+    <div className="w-full border rounded-sm flex flex-col md:h-full justify-between bg-white/95 md:max-h-56 md:sticky md:top-16">
       <div className="flex justify-between border-b items-center p-4">
         <div className="inline-flex flex-col md:space-x-2 md:flex-row">
           <span>#{user.id}</span>
@@ -17,7 +17,7 @@ function UserInfo() {
         </div>
 
         <Badge type={user.status ? "success" : "danger"}>
-          {user.status ? "ACTIVE" : "DEACTIVE"}
+          {user.status ? "ACTIVE" : "INACTIVE"}
         </Badge>
       </div>
       <div className="flex justify-between border-t p-2 items-center">

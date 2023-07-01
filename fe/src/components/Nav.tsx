@@ -10,7 +10,7 @@ export function Nav() {
   };
 
   return (
-    <nav className="p-4 md:mb-12 border-b border-x-blue-950 sticky top-0 z-10 bg-gray-50/95 flex justify-between">
+    <nav className="p-4 md:mb-12 border-b border-x-blue-950 sticky top-0 z-10 bg-slate-50/90 flex justify-between">
       <div className="text-blue-800 font-medium uppercase flex gap-4">
         <Link to="/users">Users</Link>
         <Link to="/">Logs</Link>

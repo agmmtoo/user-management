@@ -14,8 +14,8 @@ func (app *application) routes() http.Handler {
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE"},
 		AllowedHeaders:   []string{"*"},
-		AllowCredentials: false,
-		Debug:            false,
+		AllowCredentials: true,
+		Debug:            true,
 	})
 
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)

@@ -3,13 +3,15 @@ import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/auth.context";
 import Button from "../components/global/Button";
 import { authUser } from "../api/user.api";
+import { useState } from "react";
 
 function Login() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [e, setE] = useState(null);
 
   const from = location?.state?.from?.pathname ?? "/";
-  
+
   const { user, setUser } = useAuth();
 
   if (user) {
@@ -22,16 +24,19 @@ function Login() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    authUser(email, password).then((response) => {
-      setUser(response);
-      const auth = JSON.stringify(response);
-      localStorage.setItem("user", auth);
-      navigate(from, { replace: true });
-    });
+    authUser(email, password)
+      .then((response) => {
+        setUser(response);
+        const auth = JSON.stringify(response);
+        localStorage.setItem("user", auth);
+        navigate(from, { replace: true });
+      })
+      .catch(setE);
   };
-
+  
   return (
     <>
+      {e && <p>{e?.message}</p>}
       <form className="space-y-2 w-full md:w-3/5" onSubmit={handleLogin}>
         <input
           type="email"

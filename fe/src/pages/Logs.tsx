@@ -23,7 +23,7 @@ function Logs() {
         </thead>
         <tbody className="overflow-scroll max-w-full">
           {data.logs.map((log) => (
-            <Tr key={log.id} className="odd:bg-white even:bg-slate-50">
+            <Tr key={log.id} className="odd:bg-white even:bg-slate-100">
               <Td>{log.id}</Td>
               <Td>
                 <span className="text-xs text-slate-600 font-medium whitespace-nowrap">
