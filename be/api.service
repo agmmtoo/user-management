@@ -1,0 +1,23 @@
+[Unit]
+Description=YMFL API Server
+
+After=postgresql.service
+After=network-online.target
+Wants=network-online.target
+
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=exec
+User=ubuntu
+Group=ubuntu
+EnvironmentFile=/etc/environment
+WorkingDirectory=/home/ubuntu
+ExecStart=/home/ubuntu/api -port=${PORT} -dburl=${DB_URL} -jwt-secret=${JWT_SECRET}
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

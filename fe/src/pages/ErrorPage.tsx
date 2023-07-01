@@ -1,8 +1,13 @@
 import { useRouteError, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/auth.context";
 
+interface RouteError {
+  statusText?: string;
+  message?: string;
+}
+
 export default function ErrorPage() {
-  const error = useRouteError();
+  const error = useRouteError() as RouteError;
   const auth = useAuth();
 
   if (error) {
@@ -16,7 +21,7 @@ export default function ErrorPage() {
   return (
     <div>
       <h1>Error Page</h1>
-      <p>{error?.statusText || error?.message}</p>
+      {/* <p>{error?.statusText || error?.message}</p> */}
     </div>
   );
 }

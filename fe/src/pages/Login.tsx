@@ -8,7 +8,7 @@ import { useState } from "react";
 function Login() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [e, setE] = useState(null);
+  const [error, setError] = useState<Error>();
 
   const from = location?.state?.from?.pathname ?? "/";
 
@@ -31,12 +31,12 @@ function Login() {
         localStorage.setItem("user", auth);
         navigate(from, { replace: true });
       })
-      .catch(setE);
+      .catch(setError);
   };
   
   return (
     <>
-      {e && <p>{e?.message}</p>}
+      {error && <p className="text-sm text-red-600 font-medium">{error.message}</p>}
       <form className="space-y-2 w-full md:w-3/5" onSubmit={handleLogin}>
         <input
           type="email"
