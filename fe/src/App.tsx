@@ -12,6 +12,7 @@ import AuthLayout from "./pages/AuthLayout";
 import Users from "./pages/Users";
 import Logs from "./pages/Logs";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import UserInfo from "./components/users/UserInfo";
 import NewUser from "./components/users/NewUser";
 import EditUser from "./components/users/EditUser";
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
         <Route index element={<Logs />} loader={logsLoader} />
       </Route>
       <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
     </Route>
   )
 );

@@ -2,34 +2,32 @@ import { useLocation, Navigate, useNavigate, Link } from "react-router-dom";
 
 import { useAuth } from "../contexts/auth.context";
 import Button from "../components/global/Button";
-import { authUser } from "../api/user.api";
+import { createUser } from "../api/user.api";
 import { useState } from "react";
 
-function Login() {
+function Signup() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<Error | null>(null);
 
   const from = location?.state?.from?.pathname ?? "/";
 
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   if (user) {
     return <Navigate to={from} replace />;
   }
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    authUser(email, password)
-      .then((response) => {
-        setUser(response);
-        const auth = JSON.stringify(response);
-        localStorage.setItem("user", auth);
-        navigate(from, { replace: true });
+    createUser({ name, email, password })
+      .then(() => {
+        navigate("/login");
       })
       .catch(setError);
   };
@@ -39,7 +37,14 @@ function Login() {
       {error && (
         <p className="text-sm text-red-600 font-medium">{error.message}</p>
       )}
-      <form className="space-y-2 w-full md:w-3/5" onSubmit={handleLogin}>
+      <form className="space-y-2 w-full md:w-3/5" onSubmit={handleSignup}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          required
+          className="form-input"
+        />
         <input
           type="email"
           name="email"
@@ -55,9 +60,9 @@ function Login() {
           className="form-input"
         />
         <div className="flex gap-4 items-center">
-          <Button type="submit">Login</Button>
-          <Link to="/signup" className="text-blue-600">
-            Signup
+          <Button type="submit">Signup</Button>
+          <Link to="/login" className="text-blue-600">
+            Login
           </Link>
         </div>
       </form>
@@ -65,4 +70,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;
