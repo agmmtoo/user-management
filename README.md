@@ -1,6 +1,6 @@
 # README
 
-[Visit](http://13.250.116.55/)
+[Visit](http://13.250.194.243/)
 
 email: `admin@example.com`
 password: `admin`
